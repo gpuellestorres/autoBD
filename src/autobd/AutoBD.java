@@ -15,10 +15,21 @@ public class AutoBD {
 
     public static void main(String[] args) {
         bdHelper.crearTabla(Cuadrado.class, true);
-        bdHelper.crearTabla(Dvd.class, false);
+        bdHelper.crearTabla(Dvd.class, true);
 
-        Cuadrado cuad = new Cuadrado();
-
+        Cuadrado cuadrado = new Cuadrado();
+        
+        cuadrado.ancho=10;
+        cuadrado.nombre = "primero";
+        
+        bdHelper.add(cuadrado);
+        
+        Dvd dvd = new Dvd();
+        dvd.hd=false;
+        dvd.minutos=135;
+        dvd.titulo="The Big Lebowski";
+        
+        bdHelper.add(dvd);
     }
 }
 
@@ -109,25 +120,32 @@ class bdHelper {
                     + "( ";
 
             Field[] fields = clase.getFields();
-
+            
+            int i = 0;
             for (Field field : fields) {
-                cadena += " " + field.getName() + ", ";
+                if(i==0){
+                    cadena += field.getName();
+                    i++;
+                }
+                else
+                {
+                    cadena += ", " + field.getName();
+                }
             }
 
-            cadena = cadena + ") VALUES(";
-
-            int i = 0;
-
+            cadena = cadena + ") VALUES('";
+            
+            i=0;
             for (Field field : fields) {
                 if (i == 0) {
                     cadena += field.get(instancia);
                     i++;
                 } else {
-                    cadena += ", " + field.get(instancia);
+                    cadena += "', '" + field.get(instancia);
                 }
             }
 
-            cadena = cadena + ")";
+            cadena = cadena + "')";
 
             System.out.println(cadena);
 
